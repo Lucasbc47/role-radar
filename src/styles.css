@@ -2,3 +2,7 @@
   font-size: 2.5rem;
   color: rgb(0, 104, 231);
 }
+
+.titulo .pi {
+  font-size: inherit;
+}

@@ -8,7 +8,10 @@ const App = () => {
 
   return (
     <div>
-      <h1 className="titulo">RolêRadar</h1>
+      <h1 className="titulo">
+        <i className="pi pi-map-marker mr-2" />
+        RolêRadar
+      </h1>
       <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
       <footer>RolêRadar © {obterAno()}</footer>
     </div>
