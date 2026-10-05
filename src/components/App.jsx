@@ -1,9 +1,12 @@
 import { Component } from "react";
+import geoapifyClient from "../utils/geoapifyClient";
+
 import Loading from "./Loading";
 import Creditos from "./Creditos";
-
 import Cartao from "./Cartao";
 import MeuPonto from "./MeuPonto";
+
+import { Button } from "@primereact/ui/button";
 
 export default class App extends Component {
   state = {
@@ -33,6 +36,19 @@ export default class App extends Component {
     );
   };
 
+  onBuscaRealizada = async (categoria, raio) => {
+    const { latitude, longitude } = this.state;
+    const resultado = await geoapifyClient.get("/places", {
+      params: {
+        categories: categoria,
+        filter: `circle:${longitude},${latitude},${raio}`,
+        bias: `proximity:${longitude},${latitude}`,
+        limit: 20,
+      },
+    });
+    console.log(resultado.data.features);
+  };
+
   render() {
     const estiloSubtitulo = {
       color: "#6c757d",
@@ -55,14 +71,21 @@ export default class App extends Component {
         ) : !this.state.latitude ? (
           <Loading mensagem="Aguardando permissão de localização..." />
         ) : (
-          <Cartao cabecalho="Você está aqui">
-            <MeuPonto
-              latitude={this.state.latitude}
-              longitude={this.state.longitude}
-              horarioLocalizacao={this.state.horarioLocalizacao}
-              onAtualizar={this.obterLocalizacao}
-            />
-          </Cartao>
+          <>
+            <Cartao cabecalho="Você está aqui">
+              <MeuPonto
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                horarioLocalizacao={this.state.horarioLocalizacao}
+                onAtualizar={this.obterLocalizacao}
+              />
+            </Cartao>
+            <Button
+              onClick={() => this.onBuscaRealizada("catering.cafe", 1000)}
+            >
+              Testar busca
+            </Button>
+          </>
         )}
         <footer>RolêRadar © {obterAno()}</footer>
       </div>
