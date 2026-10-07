@@ -6,6 +6,7 @@ import Creditos from "./Creditos";
 import Cartao from "./Cartao";
 import MeuPonto from "./MeuPonto";
 import Busca from "./Busca";
+import ListaLugares from "./ListaLugares";
 
 export default class App extends Component {
   state = {
@@ -13,6 +14,7 @@ export default class App extends Component {
     longitude: null,
     horarioLocalizacao: null,
     mensagemDeErro: null,
+    lugares: null,
   };
 
   obterLocalizacao = () => {
@@ -45,7 +47,7 @@ export default class App extends Component {
         limit: 20,
       },
     });
-    console.log(resultado.data.features);
+    this.setState({ lugares: resultado.data.features });
   };
 
   render() {
@@ -57,35 +59,49 @@ export default class App extends Component {
     const obterAno = () => new Date().getFullYear();
 
     return (
-      <div>
-        <h1 className="titulo">
-          <i className="pi pi-map-marker mr-2" />
-          RolêRadar
-        </h1>
-        <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
-        <Creditos />
+      <div className="grid">
+        <div className="col-12">
+          <h1 className="titulo">
+            <i className="pi pi-map-marker mr-2" />
+            RolêRadar
+          </h1>
+          <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
+          <Creditos />
+        </div>
 
-        {this.state.mensagemDeErro ? (
-          <p>{this.state.mensagemDeErro}</p>
-        ) : !this.state.latitude ? (
-          <Loading mensagem="Aguardando permissão de localização..." />
-        ) : (
-          <div>
-            <Cartao cabecalho="Você está aqui">
-              <MeuPonto
-                latitude={this.state.latitude}
-                longitude={this.state.longitude}
-                horarioLocalizacao={this.state.horarioLocalizacao}
-                onAtualizar={this.obterLocalizacao}
-              />
-            </Cartao>
+        <div className="col-6">
+          {this.state.mensagemDeErro ? (
+            <p>{this.state.mensagemDeErro}</p>
+          ) : !this.state.latitude ? (
+            <Loading mensagem="Aguardando permissão de localização..." />
+          ) : (
+            <div>
+              <Cartao cabecalho="Você está aqui">
+                <MeuPonto
+                  latitude={this.state.latitude}
+                  longitude={this.state.longitude}
+                  horarioLocalizacao={this.state.horarioLocalizacao}
+                  onAtualizar={this.obterLocalizacao}
+                />
+              </Cartao>
 
-            <Cartao cabecalho="O que você procura?">
-              <Busca onBuscaRealizada={this.onBuscaRealizada} />
-            </Cartao>
-          </div>
-        )}
-        <footer>RolêRadar © {obterAno()}</footer>
+              <Cartao cabecalho="O que você procura?">
+                <Busca onBuscaRealizada={this.onBuscaRealizada} />
+              </Cartao>
+            </div>
+          )}
+        </div>
+
+        <div className="col-6">
+          {this.state.lugares === null ? null : this.state.lugares.length ===
+            0 ? (
+            <p>Nenhum lugar encontrado. Tente aumentar o raio.</p>
+          ) : (
+            <ListaLugares lugares={this.state.lugares} />
+          )}
+        </div>
+
+        <footer className="col-12">RolêRadar © {obterAno()}</footer>
       </div>
     );
   }
