@@ -5,8 +5,7 @@ import Loading from "./Loading";
 import Creditos from "./Creditos";
 import Cartao from "./Cartao";
 import MeuPonto from "./MeuPonto";
-
-import { Button } from "@primereact/ui/button";
+import Busca from "./Busca";
 
 export default class App extends Component {
   state = {
@@ -71,7 +70,7 @@ export default class App extends Component {
         ) : !this.state.latitude ? (
           <Loading mensagem="Aguardando permissão de localização..." />
         ) : (
-          <>
+          <div>
             <Cartao cabecalho="Você está aqui">
               <MeuPonto
                 latitude={this.state.latitude}
@@ -80,12 +79,11 @@ export default class App extends Component {
                 onAtualizar={this.obterLocalizacao}
               />
             </Cartao>
-            <Button
-              onClick={() => this.onBuscaRealizada("catering.cafe", 1000)}
-            >
-              Testar busca
-            </Button>
-          </>
+
+            <Cartao cabecalho="O que você procura?">
+              <Busca onBuscaRealizada={this.onBuscaRealizada} />
+            </Cartao>
+          </div>
         )}
         <footer>RolêRadar © {obterAno()}</footer>
       </div>

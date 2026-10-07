@@ -1,3 +1,7 @@
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
 .titulo {
   font-size: 2.5rem;
   color: rgb(0, 104, 231);
